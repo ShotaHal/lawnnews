@@ -1,0 +1,263 @@
+/* app/globals.css */
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap');
+
+:root {
+  --bg:         #080c10;
+  --surface:    #0d1319;
+  --surface2:   #131c26;
+  --border:     #1e2d3d;
+  --accent:     #00d4aa;
+  --accent2:    #ff6b35;
+  --accent3:    #ffd23f;
+  --danger:     #ff3b55;
+  --muted:      #4a6070;
+  --text:       #c8d8e4;
+  --text-dim:   #6b8090;
+  --energy:     #ff8c00;
+  --pos:        #00d4aa;
+  --neg:        #ff3b55;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Syne', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* スキャンライン演出 */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0px, transparent 2px,
+    rgba(0,212,170,0.012) 2px, rgba(0,212,170,0.012) 4px
+  );
+  pointer-events: none;
+  z-index: 9999;
+}
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+.mono { font-family: 'Space Mono', monospace; }
+
+/* ── ヘッダー ── */
+.header {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 24px;
+  background: rgba(13,19,25,0.97);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.logo { display: flex; align-items: center; gap: 12px; }
+.logo-icon {
+  width: 32px; height: 32px;
+  border: 2px solid var(--accent); border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700;
+  color: var(--accent);
+  animation: pulse-border 3s ease-in-out infinite;
+}
+@keyframes pulse-border {
+  0%,100% { box-shadow: 0 0 0 0 rgba(0,212,170,0.4); }
+  50%      { box-shadow: 0 0 0 6px rgba(0,212,170,0); }
+}
+.logo-text { font-size: 17px; font-weight: 800; letter-spacing: 3px; color: #fff; }
+.logo-sub  { font-size: 9px; color: var(--muted); letter-spacing: 1.5px; }
+.header-right { display: flex; align-items: center; gap: 14px; }
+.live-badge {
+  display: flex; align-items: center; gap: 6px;
+  font-family: 'Space Mono', monospace; font-size: 11px; color: var(--accent);
+}
+.live-dot {
+  width: 7px; height: 7px; border-radius: 50%; background: var(--accent);
+  animation: blink 1.4s step-end infinite;
+}
+@keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.15; } }
+.refresh-btn {
+  background: transparent; border: 1px solid var(--border);
+  color: var(--text-dim); padding: 6px 14px; cursor: pointer;
+  font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 1px;
+  border-radius: 2px; transition: all .2s;
+}
+.refresh-btn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+.refresh-btn:disabled { opacity: .35; cursor: not-allowed; }
+
+/* ── ティッカー ── */
+.ticker-wrap {
+  display: flex; align-items: stretch;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface); min-height: 48px; overflow: hidden;
+}
+.ticker-label {
+  background: var(--accent2); color: #000;
+  font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700;
+  letter-spacing: 2px; padding: 0 16px;
+  display: flex; align-items: center; white-space: nowrap; flex-shrink: 0;
+}
+.ticker-body { flex: 1; overflow: hidden; display: flex; align-items: center; }
+.ticker-track {
+  display: flex; gap: 40px; white-space: nowrap;
+  animation: scroll-left 70s linear infinite;
+}
+@keyframes scroll-left { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+.ticker-item {
+  font-family: 'Space Mono', monospace; font-size: 11px; color: var(--text);
+  display: flex; align-items: center; gap: 8px;
+}
+.ticker-dot { color: var(--accent2); }
+.ticker-tag {
+  font-size: 9px; letter-spacing: 1px;
+  background: rgba(255,107,53,.15); color: var(--accent2);
+  padding: 1px 5px; border-radius: 2px;
+}
+
+/* ── 原油価格バー ── */
+.oil-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 1px; background: var(--border);
+}
+.oil-card {
+  background: var(--surface2); padding: 14px 16px;
+  position: relative; overflow: hidden;
+}
+.oil-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: var(--energy); opacity: .6;
+}
+.oil-lbl  { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 2px; color: var(--muted); margin-bottom: 6px; }
+.oil-val  { font-family: 'Space Mono', monospace; font-size: 22px; font-weight: 700; color: var(--energy); line-height: 1; margin-bottom: 4px; }
+.oil-chg  { font-family: 'Space Mono', monospace; font-size: 11px; display: flex; align-items: center; gap: 4px; }
+.oil-date { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--muted); margin-top: 4px; }
+.up   { color: var(--pos); }
+.down { color: var(--neg); }
+.neu  { color: var(--muted); }
+
+/* ── メインレイアウト ── */
+.main-grid {
+  display: grid;
+  grid-template-columns: 320px 1fr 280px;
+  gap: 1px;
+  background: var(--border);
+  min-height: calc(100vh - 160px);
+}
+.panel {
+  background: var(--surface);
+  padding: 16px;
+  overflow: hidden;
+  display: flex; flex-direction: column;
+}
+.panel-hdr {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.panel-title {
+  font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--text-dim); display: flex; align-items: center; gap: 8px;
+}
+.panel-count {
+  font-family: 'Space Mono', monospace; font-size: 10px; color: var(--muted);
+  background: var(--surface2); padding: 2px 8px; border-radius: 2px;
+}
+.scroll-area { flex: 1; overflow-y: auto; }
+
+/* ── エネルギーシグナル ── */
+.energy-item { padding: 12px 0; border-bottom: 1px solid rgba(30,45,61,.6); }
+.e-urgency { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--energy); letter-spacing: 1.5px; margin-bottom: 5px; }
+.e-headline { font-size: 12px; font-weight: 600; color: var(--text); line-height: 1.5; margin-bottom: 4px; }
+.e-summary  { font-size: 10px; color: var(--text-dim); line-height: 1.5; }
+.signal-row { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
+.signal-lbl { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--muted); width: 44px; flex-shrink: 0; }
+.signal-bar { flex: 1; height: 4px; background: var(--surface2); border-radius: 2px; overflow: hidden; }
+.signal-fill { height: 100%; border-radius: 2px; }
+.e-meta { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--muted); margin-top: 4px; }
+
+/* ── ニュースフィード ── */
+.news-item { padding: 12px 0; border-bottom: 1px solid rgba(30,45,61,.6); cursor: pointer; transition: background .15s; }
+.news-item:hover { background: rgba(0,212,170,.04); padding-left: 4px; }
+.news-meta { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; flex-wrap: wrap; }
+.news-tag {
+  font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 1px;
+  padding: 2px 6px; border-radius: 2px; font-weight: 700;
+}
+.t-hormuz { background: rgba(255,59,85,.2);    color: var(--danger); }
+.t-opec   { background: rgba(255,210,63,.2);   color: var(--accent3); }
+.t-lng    { background: rgba(0,212,170,.2);    color: var(--accent); }
+.t-shale  { background: rgba(255,107,53,.2);   color: var(--accent2); }
+.t-saudi  { background: rgba(255,140,0,.2);    color: var(--energy); }
+.t-uae    { background: rgba(255,140,0,.15);   color: var(--energy); }
+.t-energy { background: rgba(255,140,0,.12);   color: var(--energy); }
+.t-mower  { background: rgba(0,212,170,.12);   color: var(--accent); }
+.t-gen    { background: rgba(74,96,112,.3);    color: var(--muted); }
+.news-time { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--muted); margin-left: auto; }
+.news-hl   { font-size: 13px; font-weight: 600; color: var(--text); line-height: 1.5; margin-bottom: 4px; }
+.news-sum  { font-size: 11px; color: var(--text-dim); line-height: 1.6; }
+.news-link { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--accent); text-decoration: none; margin-top: 4px; display: inline-block; }
+.news-link:hover { text-decoration: underline; }
+.news-reason { font-size: 10px; color: var(--accent3); margin-top: 4px; font-style: italic; }
+
+/* ── 芝刈機パネル ── */
+.gauge-wrap { margin-bottom: 16px; }
+.gauge-title { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--text-dim); letter-spacing: 1px; margin-bottom: 6px; }
+.gauge-score { font-family: 'Space Mono', monospace; font-size: 30px; font-weight: 700; text-align: center; line-height: 1; margin: 6px 0 4px; }
+.gauge-verdict { font-size: 11px; font-weight: 700; text-align: center; letter-spacing: 1px; margin-bottom: 10px; }
+.gauge-bar { position: relative; height: 8px; background: linear-gradient(to right, var(--neg), #333 50%, var(--pos)); border-radius: 4px; }
+.gauge-needle {
+  position: absolute; top: -5px; width: 3px; height: 18px;
+  background: #fff; border-radius: 2px; transform: translateX(-50%);
+  transition: left .9s cubic-bezier(.34,1.56,.64,1);
+  box-shadow: 0 0 6px rgba(255,255,255,.9);
+}
+.gauge-lbls { display: flex; justify-content: space-between; font-family: 'Space Mono', monospace; font-size: 9px; margin-top: 4px; }
+
+.ind-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+.ind-card { background: var(--surface2); padding: 10px; border: 1px solid var(--border); border-radius: 2px; }
+.ind-lbl  { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--muted); letter-spacing: 1px; margin-bottom: 2px; }
+.ind-sub  { font-size: 8px; color: var(--muted); margin-bottom: 5px; }
+.ind-val  { font-family: 'Space Mono', monospace; font-size: 16px; font-weight: 700; line-height: 1; margin-bottom: 2px; }
+.ind-trend{ font-size: 9px; color: var(--text-dim); }
+
+.mower-item { padding: 10px 0; border-bottom: 1px solid rgba(30,45,61,.5); }
+.impact-badge {
+  display: inline-flex; align-items: center; gap: 3px;
+  font-family: 'Space Mono', monospace; font-size: 9px; font-weight: 700;
+  padding: 2px 7px; border-radius: 2px; margin-bottom: 5px;
+}
+.b-pos { background: rgba(0,212,170,.2);  color: var(--pos); }
+.b-neg { background: rgba(255,59,85,.2);  color: var(--neg); }
+.b-neu { background: rgba(74,96,112,.2);  color: var(--muted); }
+.mower-hl  { font-size: 11px; font-weight: 600; color: var(--text); line-height: 1.5; margin-bottom: 3px; }
+.mower-rsn { font-size: 10px; color: var(--text-dim); line-height: 1.5; }
+
+/* ── ローディング ── */
+.loading { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; gap: 12px; }
+.spinner { width: 22px; height: 22px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-txt { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); letter-spacing: 1px; }
+.err-box { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--neg); border: 1px solid rgba(255,59,85,.3); border-radius: 2px; padding: 8px; margin: 8px 0; }
+
+/* ── フッター ── */
+.footer {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 24px; background: var(--surface); border-top: 1px solid var(--border);
+  font-family: 'Space Mono', monospace; font-size: 9px; color: var(--muted);
+}
+
+/* ── レスポンシブ ── */
+@media (max-width: 900px) {
+  .main-grid { grid-template-columns: 1fr; }
+  .oil-grid  { grid-template-columns: repeat(2,1fr); }
+}
+@media (max-width: 500px) {
+  .oil-grid  { grid-template-columns: 1fr 1fr; }
+  .ind-grid  { grid-template-columns: 1fr 1fr; }
+  .header { flex-direction: column; gap: 8px; align-items: flex-start; }
+}
